@@ -12,8 +12,8 @@ def run(bug):
     outfile = open(outfile_name, "w+")
     print("Starting thread with output: " + outfile_name)
     call(["bash", "runWrapper.sh", proj, stdnt, rev, mode], stdout=outfile, stderr=outfile)
-    arefile_name = proj + "_" + stdnt + "_" + rev + "_" + "mode" + mode + ".are"
-    arefile = open(arefile_name, "w+")
+    #arefile_name = proj + "_" + stdnt + "_" + rev + "_" + "mode" + mode + ".are"
+    #arefile = open(arefile_name, "w+")
     #seeds
     bug_dir = "/Users/zhendeveloper/Desktop/LabBox/ProgRepScripts/ICSTest/" + "mode" + mode + "/" + proj + "/" + stdnt + "/" + rev + "/"
     #for seed in range(0, 20):
@@ -22,7 +22,7 @@ def run(bug):
 
 if __name__ == "__main__":
     if len(sys.argv) != 2:
-        print("Usage: " + "python3 multi_driver.py PATH_TO_BUGS_TO_RUN")
+        print("Usage: " + "python3 multi_driver.py PATH_TO_LIST_OF_BUGS_TO_RUN")
 
     num_threads = 16
 
