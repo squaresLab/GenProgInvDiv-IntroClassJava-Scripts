@@ -29,19 +29,19 @@ python3 get_pos_neg_tests.py ${SUREFIRE} ${POSTESTS} ${NEGTESTS}
 #separate pos & neg test classes
 cd "separateTests"
 SEPARATETESTSCP=".:javaparser_javaparser-core_target_classes/"
-if [ "SeparateTests.java" -nt "SeparateTests.class" ]; then
-    echo "recompiling SeparateTests.java since it either doesn't exist or is out of date"
+#if [ "SeparateTests.java" -nt "SeparateTests.class" ]; then
+#    echo "recompiling SeparateTests.java since it either doesn't exist or is out of date"
     javac -classpath ${SEPARATETESTSCP} "SeparateTests.java"
-fi
+#fi
 SEPARATEDTESTS="$BUGPATH/src/test-processed"
 mkdir ${SEPARATEDTESTS}
 OLDTESTCLASSES="$BUGPATH/src/test/java"
 java -cp ${SEPARATETESTSCP} "SeparateTests" ${POSTESTS} ${NEGTESTS} ${SEPARATEDTESTS} ${OLDTESTCLASSES}
 
-##change timeouts from 1000 to 10000
-#sed -i.sedtemp 's/(timeout = 1000)/(timeout = 10000)/g' $SEPARATEDTESTS/introclassJava/PositiveTest.java
-#sed -i.sedtemp 's/(timeout = 1000)/(timeout = 10000)/g' $SEPARATEDTESTS/introclassJava/NegativeTest.java
-#rm $SEPARATEDTESTS/introclassJava/*.sedtemp
+#change timeouts from 1000 to 3000
+sed -i.sedtemp 's/(timeout = 1000)/(timeout = 3000)/g' $SEPARATEDTESTS/introclassJava/PositiveTest.java
+sed -i.sedtemp 's/(timeout = 1000)/(timeout = 3000)/g' $SEPARATEDTESTS/introclassJava/NegativeTest.java
+rm $SEPARATEDTESTS/introclassJava/*.sedtemp
 
 #replace old tests w/ the new separated tests
 rm -r ${OLDTESTCLASSES}/introclassJava/
