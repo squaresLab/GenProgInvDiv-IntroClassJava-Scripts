@@ -191,22 +191,6 @@ public class SeparateTests
 		}
 	}
 
-	private static void writeStringToFile(String data, String path)
-	{
-		try
-		{
-			File f = new File(path);
-			//not making directories, file should already exist
-			FileWriter fw = new FileWriter(f, false); //overwrite
-			fw.write(data, 0, data.length());
-			fw.close();
-		}
-		catch (IOException e)
-		{
-			throw new RuntimeException(e);
-		}
-	}
-
 	private static String getFullClassName(String packageName, String shortClassName)
 	{
 		return packageName + "." + shortClassName;
@@ -271,12 +255,7 @@ public class SeparateTests
 		writeCUToFile(posCU, pathNewClasses, packageName, POS_TEST_SHORT_CLASS_NAME);
 		writeCUToFile(negCU, pathNewClasses, packageName, NEG_TEST_SHORT_CLASS_NAME);
 		//overwrite pos.tests and neg.tests
-		//writeStringToFile(getFullClassName(packageName, POS_TEST_SHORT_CLASS_NAME), pathPosTests);
-		//writeStringToFile(getFullClassName(packageName, NEG_TEST_SHORT_CLASS_NAME), pathNegTests);
 		writeMethodsListToFile(packageName, posClassDec, pathPosTests);
 		writeMethodsListToFile(packageName, negClassDec, pathNegTests);
-
-		//for daikon
-		writeStringToFile(getFullClassName(packageName, POS_TEST_SHORT_CLASS_NAME), pathPosTests);
 	}
 }
