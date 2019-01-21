@@ -1,12 +1,10 @@
 #!/bin/bash
 
-LABBOX=/Users/zhendeveloper/Desktop/LabBox
-
 PROJ=$1
 STNT=$2
 REVN=$3
-ICJ=$LABBOX/IntroClassJava
-BGDR=$LABBOX/ProgRepScripts/ICSTest
+ICJ=/Users/zhendeveloper/Desktop/LabBox/IntroClassJava
+BGDR=/Users/zhendeveloper/Desktop/LabBox/ProgRepScripts/ICSTest
 JAVA=/Library/Java/JavaVirtualMachines/jdk1.8.0_45.jdk/Contents/Home/
 SSED=0
 ESED=5
