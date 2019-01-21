@@ -15,7 +15,7 @@ def run(bug):
     #arefile_name = proj + "_" + stdnt + "_" + rev + "_" + "mode" + mode + ".are"
     #arefile = open(arefile_name, "w+")
     #seeds
-    bug_dir = "/Users/zhendeveloper/Desktop/LabBox/ProgRepScripts/ICSTest/" + "mode" + mode + "/" + proj + "/" + stdnt + "/" + rev + "/"
+    #bug_dir = "/Users/zhendeveloper/Desktop/LabBox/ProgRepScripts/ICSTest/" + "mode" + mode + "/" + proj + "/" + stdnt + "/" + rev + "/"
     #for seed in range(0, 20):
     #    call(["java", "-cp", gp4j_home+"/target/classes:"+gp4j_home+"/lib/commons-lang3-3.8.1.jar",
     #          "ylyu1.wean.DataProcessor", bug_dir, str(seed)], stdout=arefile, stderr=arefile)
