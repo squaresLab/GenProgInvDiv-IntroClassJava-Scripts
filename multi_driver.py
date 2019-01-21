@@ -16,7 +16,7 @@ def run(bug):
     arefile = open(arefile_name, "w+")
     #seeds
     bug_dir = "/Users/zhendeveloper/Desktop/LabBox/ProgRepScripts/ICSTest/" + "mode" + mode + "/" + proj + "/" + stdnt + "/" + rev + "/"
-    #for seed in range(0, 5):
+    #for seed in range(0, 20):
     #    call(["java", "-cp", gp4j_home+"/target/classes:"+gp4j_home+"/lib/commons-lang3-3.8.1.jar",
     #          "ylyu1.wean.DataProcessor", bug_dir, str(seed)], stdout=arefile, stderr=arefile)
 
@@ -24,7 +24,7 @@ if __name__ == "__main__":
     if len(sys.argv) != 2:
         print("Usage: " + "python3 multi_driver.py PATH_TO_BUGS_TO_RUN")
 
-    num_threads = 2
+    num_threads = 16
 
     task_list = list()
 

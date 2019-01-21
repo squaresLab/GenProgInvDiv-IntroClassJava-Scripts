@@ -96,8 +96,8 @@ FILE=$BUGPATH/introclass.config
 /bin/cat <<EOM >$FILE
 seed = 0
 sanity = yes
-popsize = 8
-generations = 3
+popsize = 40
+generations = 10
 javaVM = $DIROFJAVA8/jre/bin/java
 workingDir = $BUGPATH
 outputDir = $BUGPATH/tmp
