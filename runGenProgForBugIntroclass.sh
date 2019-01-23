@@ -48,7 +48,8 @@ bash prepareGenProgForBugIntroclass.sh $BUGWD $DIROFJAVA8 $INVCHKMODE
 
 cd $BUGWD
 for (( seed=$STARTSEED; seed<=$ENDSEED; seed++ )) do
-    echo "RUNNING THE BUG: $PROJECT $USERID $REVID, WITH THE SEED: $seed"
+    echo -n "RUNNING THE BUG: $PROJECT $USERID $REVID, WITH THE SEED: $seed "
+    date
 
     #change the seed
     CHANGESEEDCMD="sed -i.sedtemp '1 s/.*/seed = ${seed}/' introclass.config"
@@ -74,5 +75,8 @@ for (( seed=$STARTSEED; seed<=$ENDSEED; seed++ )) do
     mv $BUGWD/original/ $BUGWD/tmp/
     rm $BUGWD/*.ser
 done
+
+echo -n "End of experiment: "
+date
 
 fi
