@@ -84,10 +84,18 @@ for (( seed=$STARTSEED; seed<=$ENDSEED; seed++ )) do
         mkdir $BUGWD/tmp/
         mv $BUGWD/original/ $BUGWD/tmp/
         #rm $BUGWD/*.ser
+
+        #move the results file to AWS bucket s3://gp4j-invdiv-short-results
+        aws s3 cp $BUGWD/ResultOfSeed${seed}.results s3://gp4j-invdiv-short-results
     fi
 done
 
 echo -n "End of experiment: "
 date
+
+#make a tarball and upload everything to aws
+BIGTAR="$GP4JBUGSDIR/${PROJECT}_${USERID}_${REVID}_mode${INVCHKMODE}.tar.gz"
+tar -czf ${BIGTAR} ${BUGWD}
+aws s3 mv ${BIGTAR} s3://gp4j-invdiv-full-results
 
 fi
