@@ -83,10 +83,12 @@ for (( seed=$STARTSEED; seed<=$ENDSEED; seed++ )) do
         rm -r $BUGWD/tmp/
         mkdir $BUGWD/tmp/
         mv $BUGWD/original/ $BUGWD/tmp/
-        #rm $BUGWD/*.ser
+        #rm $BUGWD/*.sernano
 
         #move the results file to AWS bucket s3://gp4j-invdiv-short-results
-        aws s3 cp $BUGWD/ResultOfSeed${seed}.results s3://gp4j-invdiv-short-results
+        AWSRESULT="$BUGWD/${PROJECT}_${USERID}_${REVID}_mode${INVCHKMODE}_ResultOfSeed${seed}.results"
+        cp $BUGWD/ResultOfSeed${seed}.results $AWSRESULT
+        aws s3 mv $AWSRESULT s3://gp4j-invdiv-short-results
     fi
 done
 
