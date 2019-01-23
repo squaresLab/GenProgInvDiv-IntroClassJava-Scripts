@@ -44,6 +44,7 @@ mkdir -p $BUGWD #make all directories needed
 echo "NOT compiling gp4j! Remember to compile gp4j manually!"
 
 if [ ! -f $BUGWD/introclass.config ]; then #if preparations aren't already done
+    rm -r $BUGWD/*
     rsync -r $ORIGBUGPATH/ $BUGWD
     bash prepareGenProgForBugIntroclass.sh $BUGWD $DIROFJAVA8 $INVCHKMODE
 else
