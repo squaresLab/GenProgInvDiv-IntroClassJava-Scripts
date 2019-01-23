@@ -40,40 +40,49 @@ ORIGBUGPATH="$INTROCLASS/dataset/$PROJECT/$USERID/$REVID"
 BUGWD="$GP4JBUGSDIR/mode$INVCHKMODE/$PROJECT/$USERID/$REVID/"
 mkdir -p $BUGWD #make all directories needed
 #rm -r $BUGWD/* #clean up directory if needed
-rsync -r $ORIGBUGPATH/ $BUGWD
 
 echo "NOT compiling gp4j! Remember to compile gp4j manually!"
 
-bash prepareGenProgForBugIntroclass.sh $BUGWD $DIROFJAVA8 $INVCHKMODE
+if [ ! -f $BUGWD/introclass.config ]; then #if preparations aren't already done
+    rsync -r $ORIGBUGPATH/ $BUGWD
+    bash prepareGenProgForBugIntroclass.sh $BUGWD $DIROFJAVA8 $INVCHKMODE
+else
+    echo "Not running prepareGenProgForBugIntroclass.sh"
+fi
 
 cd $BUGWD
+
 for (( seed=$STARTSEED; seed<=$ENDSEED; seed++ )) do
-    echo -n "RUNNING THE BUG: $PROJECT $USERID $REVID, WITH THE SEED: $seed "
-    date
+    if [ -f $BUGWD/ResultOfSeed${seed}.results ]; then
+        echo "RESULTS FILE DETECTED, NOT RUNNING SEED: $seed "
+    else
+        echo -n "RUNNING THE BUG: $PROJECT $USERID $REVID, WITH THE SEED: $seed "
+        date
 
-    #change the seed
-    CHANGESEEDCMD="sed -i.sedtemp '1 s/.*/seed = ${seed}/' introclass.config"
-    eval $CHANGESEEDCMD
-    rm introclass.config.sedtemp
-
-    if [ $seed != $STARTSEED ]; then
-        #remove sanity checking
-        REMOVESANITYCMD="sed -i.sedtemp 's/sanity = yes/sanity = no/' introclass.config"
-        eval $REMOVESANITYCMD
+        #change the seed
+        CHANGESEEDCMD="sed -i.sedtemp '1 s/.*/seed = ${seed}/' introclass.config"
+        eval $CHANGESEEDCMD
         rm introclass.config.sedtemp
+
+        if [ $seed != $STARTSEED ]; then
+            #remove sanity checking
+            REMOVESANITYCMD="sed -i.sedtemp 's/sanity = yes/sanity = no/' introclass.config"
+            eval $REMOVESANITYCMD
+            rm introclass.config.sedtemp
+        fi
+
+        #run
+        JAVALOC=$(which java)
+        $JAVALOC -ea -Dlog4j.configurationFile=file:"$GP4J_HOME"/src/log4j.properties -Dfile.encoding=UTF-8 -classpath "$GP4J_HOME"/target/uber-GenProg4Java-0.0.1-SNAPSHOT.jar clegoues.genprog4java.main.Main $GP4J_HOME $DIROFJAVA8 $DAIKONDIR $BUGWD/introclass.config | tee $BUGWD/logSeed${seed}.txt
+
+        #save variants in a tar file
+        tar -cvf $BUGWD/variantsSeed${seed}.tar $BUGWD/tmp/ > /dev/null
+        mv $BUGWD/tmp/original/ $BUGWD
+        rm -r $BUGWD/tmp/
+        mkdir $BUGWD/tmp/
+        mv $BUGWD/original/ $BUGWD/tmp/
+        rm $BUGWD/*.ser
     fi
-
-    #run
-    JAVALOC=$(which java)
-    $JAVALOC -ea -Dlog4j.configurationFile=file:"$GP4J_HOME"/src/log4j.properties -Dfile.encoding=UTF-8 -classpath "$GP4J_HOME"/target/uber-GenProg4Java-0.0.1-SNAPSHOT.jar clegoues.genprog4java.main.Main $GP4J_HOME $DIROFJAVA8 $DAIKONDIR $BUGWD/introclass.config | tee $BUGWD/logSeed${seed}.txt
-
-    #save variants in a tar file
-    tar -cvf $BUGWD/variantsSeed${seed}.tar $BUGWD/tmp/ > /dev/null
-    mv $BUGWD/tmp/original/ $BUGWD
-    rm -r $BUGWD/tmp/
-    mkdir $BUGWD/tmp/
-    mv $BUGWD/original/ $BUGWD/tmp/
-    rm $BUGWD/*.ser
 done
 
 echo -n "End of experiment: "
