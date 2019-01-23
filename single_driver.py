@@ -3,11 +3,12 @@ import os
 import sys
 
 gp4j_home = os.environ["GP4J_HOME"]
+output_file_dir = None
 
 
 def run(bug):
     (proj, stdnt, rev, mode) = bug #all should be strings
-    outfile_name = proj + "_" + stdnt + "_" + rev + "_" + "mode" + mode + ".out"
+    outfile_name = output_file_dir + "/" + proj + "_" + stdnt + "_" + rev + "_" + "mode" + mode + ".out"
     outfile = open(outfile_name, "w+")
     print("Starting thread with output: " + outfile_name)
     call(["bash", "runWrapper.sh", proj, stdnt, rev, mode], stdout=outfile, stderr=outfile)
@@ -20,12 +21,13 @@ def run(bug):
     #          "ylyu1.wean.DataProcessor", bug_dir, str(seed)], stdout=arefile, stderr=arefile)
 
 if __name__ == "__main__":
-    if len(sys.argv) != 2:
-        print("Usage: " + "python3 multi_driver.py PATH_TO_LIST_OF_BUGS_TO_RUN")
+    if len(sys.argv) != 3:
+        print("Usage: " + "python3 multi_driver.py PATH_TO_LIST_OF_BUGS_TO_RUN OUTPUT_FILE_DIR")
 
     task_list = list()
 
     bugslist_path = sys.argv[1]
+    output_file_dir = sys.argv[2]
     with open(bugslist_path) as bugslist_file:
         for bugprofile_str in bugslist_file:
             bug = [f.strip() for f in bugprofile_str.split(",")]
