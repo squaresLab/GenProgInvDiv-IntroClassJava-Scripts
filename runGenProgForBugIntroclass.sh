@@ -72,9 +72,9 @@ for (( seed=$STARTSEED; seed<=$ENDSEED; seed++ )) do
             rm introclass.config.sedtemp
         fi
 
-        #run
+        #run w/ 4 hour timeout
         JAVALOC=$(which java)
-        $JAVALOC -ea -Dlog4j.configurationFile=file:"$GP4J_HOME"/src/log4j.properties -Dfile.encoding=UTF-8 -classpath "$GP4J_HOME"/target/uber-GenProg4Java-0.0.1-SNAPSHOT.jar clegoues.genprog4java.main.Main $GP4J_HOME $DIROFJAVA8 $DAIKONDIR $BUGWD/introclass.config | tee $BUGWD/logSeed${seed}.txt
+        timeout 14400 $JAVALOC -ea -Dlog4j.configurationFile=file:"$GP4J_HOME"/src/log4j.properties -Dfile.encoding=UTF-8 -classpath "$GP4J_HOME"/target/uber-GenProg4Java-0.0.1-SNAPSHOT.jar clegoues.genprog4java.main.Main $GP4J_HOME $DIROFJAVA8 $DAIKONDIR $BUGWD/introclass.config | tee $BUGWD/logSeed${seed}.txt
 
         #save variants in a tar file
         tar -cvf $BUGWD/variantsSeed${seed}.tar $BUGWD/tmp/ > /dev/null
