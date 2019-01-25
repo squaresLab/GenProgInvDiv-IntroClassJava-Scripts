@@ -12,6 +12,7 @@ def run(bug):
     outfile = open(outfile_name, "w+")
     print("Starting thread with output: " + outfile_name)
     call(["bash", "runWrapper.sh", proj, stdnt, rev, mode], stdout=outfile, stderr=outfile)
+    outfile.close()
     call(["aws", "s3", "cp", outfile_name, "s3://gp4j-invdiv-full-results"])
     #arefile_name = proj + "_" + stdnt + "_" + rev + "_" + "mode" + mode + ".are"
     #arefile = open(arefile_name, "w+")
@@ -38,4 +39,4 @@ if __name__ == "__main__":
     for b in task_list:
         run(b)
 
-    call(["sudo", "shutdown", "-h", "now"])
+    call(["sudo", "halt"])
