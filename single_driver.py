@@ -38,4 +38,4 @@ if __name__ == "__main__":
     for b in task_list:
         run(b)
 
-    call(["sudo", "shutdown", "-h", "now"])
+    call(["shutdown", "-h", "now"])
