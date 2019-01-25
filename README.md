@@ -1,3 +1,5 @@
+This README is outdated, don't use until further notice.
+
 Instructions for running genprog4java w/ invariant diversity for IntroClassJava:
 
 1. Get IntroClassJava by cloning this repo: https://github.com/Spirals-Team/IntroClassJava
