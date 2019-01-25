@@ -1,4 +1,4 @@
-This is outdated, don't use.
+This README is outdated, don't use until further notice.
 
 Instructions for running genprog4java w/ invariant diversity for IntroClassJava:
 
