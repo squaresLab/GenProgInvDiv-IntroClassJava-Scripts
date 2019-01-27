@@ -66,12 +66,12 @@ for (( seed=$STARTSEED; seed<=$ENDSEED; seed++ )) do
         eval $CHANGESEEDCMD
         rm introclass.config.sedtemp
 
-        if [ $seed != $STARTSEED ]; then
+        #if [ $seed != $STARTSEED ]; then
             #don't remove sanity checking
             #REMOVESANITYCMD="sed -i.sedtemp 's/sanity = yes/sanity = no/' introclass.config"
             #eval $REMOVESANITYCMD
             #rm introclass.config.sedtemp
-        fi
+        #fi
 
         #run w/ 4 hour timeout
         JAVALOC=$(which java)
