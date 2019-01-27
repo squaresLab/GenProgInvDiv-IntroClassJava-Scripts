@@ -6,6 +6,8 @@
 #The variable GP4J_HOME should be directed to the folder where genprog4java is installed.
 #The variable DAIKONDIR should be directed to the folder where daikon is installed
 
+GP4J_HOME=/home/lvyiwei1/genprog4java-branch/genprog4java
+
 if [ "$#" -ne 9 ]; then
     echo "This script should be run with 9 parameters:"
     echo "1st param is the project in lowercase (e.g: checksum, digits, grade, ...)"
@@ -64,7 +66,7 @@ for (( seed=$STARTSEED; seed<=$ENDSEED; seed++ )) do
 
     #run
     JAVALOC=$(which java)
-    $JAVALOC -ea -Dlog4j.configurationFile=file:"$GP4J_HOME"/src/log4j.properties -Dfile.encoding=UTF-8 -classpath "$GP4J_HOME"/target/uber-GenProg4Java-0.0.1-SNAPSHOT.jar clegoues.genprog4java.main.Main $GP4J_HOME $DIROFJAVA8 $DAIKONDIR $BUGWD/introclass.config | tee $BUGWD/logSeed${seed}.txt
+    $JAVALOC -ea -Dlog4j.configurationFile=file:$GP4J_HOME/src/log4j.properties -Dfile.encoding=UTF-8 -classpath $GP4J_HOME/target/uber-GenProg4Java-0.0.1-SNAPSHOT.jar clegoues.genprog4java.main.Main $GP4J_HOME $DIROFJAVA8 $DAIKONDIR $BUGWD/introclass.config | tee $BUGWD/logSeed${seed}.txt
 
     #save variants in a tar file
     tar -cvf $BUGWD/variantsSeed${seed}.tar $BUGWD/tmp/ > /dev/null
@@ -72,7 +74,7 @@ for (( seed=$STARTSEED; seed<=$ENDSEED; seed++ )) do
     rm -r $BUGWD/tmp/
     mkdir $BUGWD/tmp/
     mv $BUGWD/original/ $BUGWD/tmp/
-    rm $BUGWD/*.ser
+    #rm $BUGWD/*.ser
 done
 
 fi

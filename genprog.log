@@ -1,0 +1,60 @@
+DEBUG	2019-01-26 15:35:06,670	0	clegoues.genprog4java.fitness.Fitness	[main]	parsing granularity, value: class
+ERROR	2019-01-26 15:35:06,708	38	clegoues.util.ConfigurationBuilder	[main]	java.io.FileNotFoundException: /home/lvyiwei1/bench/mode4/smallest/8839/003/introclass.config (No such file or directory)
+	at java.io.FileInputStream.open0(Native Method)
+	at java.io.FileInputStream.open(FileInputStream.java:195)
+	at java.io.FileInputStream.<init>(FileInputStream.java:138)
+	at java.io.FileReader.<init>(FileReader.java:72)
+	at clegoues.util.ConfigurationBuilder.loadProperties(ConfigurationBuilder.java:618)
+	at clegoues.util.ConfigurationBuilder.parseArgs(ConfigurationBuilder.java:575)
+	at clegoues.genprog4java.main.Main.main(Main.java:127)
+
+ERROR	2019-01-26 15:35:06,710	40	clegoues.util.ConfigurationBuilder	[main]	missing required property javaVM
+ERROR	2019-01-26 15:35:06,710	40	clegoues.util.ConfigurationBuilder	[main]	missing required property libs
+DEBUG	2019-01-26 15:35:06,969	0	clegoues.genprog4java.fitness.Fitness	[main]	parsing granularity, value: class
+ERROR	2019-01-26 15:35:07,002	33	clegoues.util.ConfigurationBuilder	[main]	java.io.FileNotFoundException: /home/lvyiwei1/bench/mode4/smallest/8839/003/introclass.config (No such file or directory)
+	at java.io.FileInputStream.open0(Native Method)
+	at java.io.FileInputStream.open(FileInputStream.java:195)
+	at java.io.FileInputStream.<init>(FileInputStream.java:138)
+	at java.io.FileReader.<init>(FileReader.java:72)
+	at clegoues.util.ConfigurationBuilder.loadProperties(ConfigurationBuilder.java:618)
+	at clegoues.util.ConfigurationBuilder.parseArgs(ConfigurationBuilder.java:575)
+	at clegoues.genprog4java.main.Main.main(Main.java:127)
+
+ERROR	2019-01-26 15:35:07,003	34	clegoues.util.ConfigurationBuilder	[main]	missing required property javaVM
+ERROR	2019-01-26 15:35:07,003	34	clegoues.util.ConfigurationBuilder	[main]	missing required property libs
+DEBUG	2019-01-26 15:35:07,224	0	clegoues.genprog4java.fitness.Fitness	[main]	parsing granularity, value: class
+ERROR	2019-01-26 15:35:07,259	35	clegoues.util.ConfigurationBuilder	[main]	java.io.FileNotFoundException: /home/lvyiwei1/bench/mode4/smallest/8839/003/introclass.config (No such file or directory)
+	at java.io.FileInputStream.open0(Native Method)
+	at java.io.FileInputStream.open(FileInputStream.java:195)
+	at java.io.FileInputStream.<init>(FileInputStream.java:138)
+	at java.io.FileReader.<init>(FileReader.java:72)
+	at clegoues.util.ConfigurationBuilder.loadProperties(ConfigurationBuilder.java:618)
+	at clegoues.util.ConfigurationBuilder.parseArgs(ConfigurationBuilder.java:575)
+	at clegoues.genprog4java.main.Main.main(Main.java:127)
+
+ERROR	2019-01-26 15:35:07,260	36	clegoues.util.ConfigurationBuilder	[main]	missing required property javaVM
+ERROR	2019-01-26 15:35:07,261	37	clegoues.util.ConfigurationBuilder	[main]	missing required property libs
+DEBUG	2019-01-26 15:35:07,481	0	clegoues.genprog4java.fitness.Fitness	[main]	parsing granularity, value: class
+ERROR	2019-01-26 15:35:07,512	31	clegoues.util.ConfigurationBuilder	[main]	java.io.FileNotFoundException: /home/lvyiwei1/bench/mode4/smallest/8839/003/introclass.config (No such file or directory)
+	at java.io.FileInputStream.open0(Native Method)
+	at java.io.FileInputStream.open(FileInputStream.java:195)
+	at java.io.FileInputStream.<init>(FileInputStream.java:138)
+	at java.io.FileReader.<init>(FileReader.java:72)
+	at clegoues.util.ConfigurationBuilder.loadProperties(ConfigurationBuilder.java:618)
+	at clegoues.util.ConfigurationBuilder.parseArgs(ConfigurationBuilder.java:575)
+	at clegoues.genprog4java.main.Main.main(Main.java:127)
+
+ERROR	2019-01-26 15:35:07,513	32	clegoues.util.ConfigurationBuilder	[main]	missing required property javaVM
+ERROR	2019-01-26 15:35:07,514	33	clegoues.util.ConfigurationBuilder	[main]	missing required property libs
+DEBUG	2019-01-26 15:35:07,735	0	clegoues.genprog4java.fitness.Fitness	[main]	parsing granularity, value: class
+ERROR	2019-01-26 15:35:07,776	41	clegoues.util.ConfigurationBuilder	[main]	java.io.FileNotFoundException: /home/lvyiwei1/bench/mode4/smallest/8839/003/introclass.config (No such file or directory)
+	at java.io.FileInputStream.open0(Native Method)
+	at java.io.FileInputStream.open(FileInputStream.java:195)
+	at java.io.FileInputStream.<init>(FileInputStream.java:138)
+	at java.io.FileReader.<init>(FileReader.java:72)
+	at clegoues.util.ConfigurationBuilder.loadProperties(ConfigurationBuilder.java:618)
+	at clegoues.util.ConfigurationBuilder.parseArgs(ConfigurationBuilder.java:575)
+	at clegoues.genprog4java.main.Main.main(Main.java:127)
+
+ERROR	2019-01-26 15:35:07,777	42	clegoues.util.ConfigurationBuilder	[main]	missing required property javaVM
+ERROR	2019-01-26 15:35:07,777	42	clegoues.util.ConfigurationBuilder	[main]	missing required property libs
