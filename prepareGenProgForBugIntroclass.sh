@@ -8,8 +8,6 @@ if [ "$#" -ne 3 ]; then
     echo "3th param is the mode number, indicating which search strategy to use (0 for genprog, 4 for diversity)"
 else
 
-GP4J_HOME=/home/lvyiwei1/genprog4java-branch/genprog4java
-
 BUGPATH=$1
 DIROFJAVA8=$2
 INVCHKMODE=$3
@@ -18,7 +16,6 @@ BASEDIR=$PWD
 
 #compile & run the test suite for the bug, and collect the surefire-reports
 cd ${BUGPATH}
-cp ~/bench/mode4/median/median_* src/main/java/introclassJava
 echo "Running the bug's test suite, expect to see build failure-this is normal."
 mvn test
 SUREFIRE="$BUGPATH/target/surefire-reports"
@@ -67,7 +64,7 @@ rm ${DAIKONPOSTEST}.sedtemp
 
 echo "compiling positive tests w/o timeouts for Daikon"
 cd ${DAIKONTESTS}
-TESTCP=".:$BUGPATH/target/classes:$BUGPATH/target/test-classes:$GP4J_HOME/lib/junit-4.12.jar:$GP4J_HOME/lib/hamcrest-core-1.3.jar"
+TESTCP=".:$BUGPATH/target/classes:$BUGPATH/target/test-classes:$GP4J_HOME/lib/junit-4.12.jar"
 javac -classpath ${TESTCP} ${DAIKONPOSTEST}
 
 #get class names to be repaired
@@ -99,8 +96,8 @@ FILE=$BUGPATH/introclass.config
 /bin/cat <<EOM >$FILE
 seed = 0
 sanity = yes
-popsize = 6
-generations = 5
+popsize = 40
+generations = 10
 javaVM = $DIROFJAVA8/jre/bin/java
 workingDir = $BUGPATH
 outputDir = $BUGPATH/tmp
@@ -119,13 +116,9 @@ compileCommand = ${BUGPATH}/runCompile.sh
 targetClassName = ${BUGPATH}/bugfiles.txt
 invariantCheckerMode = $INVCHKMODE
 crossp = 1.0
-
 sample = 1.0
-
 testGranularity = method
-
 edits=append;replace;delete
-
 negativePathWeight=0.65
 positivePathWeight=0.35
 EOM
