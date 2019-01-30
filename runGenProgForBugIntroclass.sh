@@ -98,7 +98,7 @@ date
 #make a tarball and upload everything to aws
 BIGTAR="$GP4JBUGSDIR/${PROJECT}_${USERID}_${REVID}_mode${INVCHKMODE}.tar.gz"
 tar -czf ${BIGTAR} ${BUGWD}
-aws s3 mv ${BIGTAR} s3://gp4j-invdiv-refactored-results
+aws s3 mv ${BIGTAR} s3://gp4j-refactored-full-results
 
 fi
 
