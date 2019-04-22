@@ -14,13 +14,13 @@ Instructions for running genprog4java w/ invariant diversity for IntroClassJava:
 3. Set the following global variables:
     1. `GP4J_HOME=path to genprog4java`
     2. `DAIKONDIR=path to daikon`
+    3. `ICJ_HOME=path to IntroClassJava`
+    4. `ICJ_OUT_DIR=path to the directory to store copies of IntroClassJava bugs. GenProg4Java will operate on these bugs.`
+    5. `JAVA_HOME=path to java8 installation`
 
 4. Edit the following variables in runWrapper.sh
-    1. `ICJ=path to IntroClassJava.`
-    2. `BGDR=path to the directory to store copies of IntroClassJava bugs. GenProg4Java will operate on these bugs.`
-    3. `JAVA=path to java8 installation`
-    4. `SSED=starting seed`
-    5. `ESED=ending seed`
+    1. `SSED=starting seed`
+    2. `ESED=ending seed`
 
 5. If you wish to run a single bug, call runWrapper.sh with the following arguments:
     1. Project (checksum, median, ...)
