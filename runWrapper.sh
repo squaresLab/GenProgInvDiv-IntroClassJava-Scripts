@@ -3,8 +3,8 @@
 PROJ=$1
 STNT=$2
 REVN=$3
-ICJ=/home/zhenyud/IntroClassJava/
-BGDR=/data
+ICJ=$ICJ_HOME
+BGDR=$ICJ_OUT_DIR
 JAVA=$JAVA_HOME
 SSED=0
 ESED=9
