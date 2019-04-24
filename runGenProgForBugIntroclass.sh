@@ -88,7 +88,7 @@ for (( seed=$STARTSEED; seed<=$ENDSEED; seed++ )) do
         #move the results file to AWS bucket s3://gp4j-invdiv-short-results
         AWSRESULT="$BUGWD/${PROJECT}_${USERID}_${REVID}_mode${INVCHKMODE}_ResultOfSeed${seed}.results"
         cp $BUGWD/ResultOfSeed${seed}.results $AWSRESULT
-        aws s3 mv $AWSRESULT s3://gp4j-refactored-short-results
+        #aws s3 mv $AWSRESULT s3://gp4j-refactored-short-results
     fi
 done
 
@@ -98,7 +98,7 @@ date
 #make a tarball and upload everything to aws
 BIGTAR="$GP4JBUGSDIR/${PROJECT}_${USERID}_${REVID}_mode${INVCHKMODE}.tar.gz"
 tar -czf ${BIGTAR} ${BUGWD}
-aws s3 mv ${BIGTAR} s3://gp4j-refactored-full-results
+#aws s3 mv ${BIGTAR} s3://gp4j-refactored-full-results
 
 fi
 
