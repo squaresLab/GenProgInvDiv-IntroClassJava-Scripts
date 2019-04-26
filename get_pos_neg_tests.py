@@ -22,7 +22,7 @@ def get_pos_neg_tests(xmlroot):
         print("Unexpected root of XML test case report: " + xmlroot.tag)
         print("Will continue to attempt to parse anyways")
     for testcase in xmlroot:
-        if testcase.tag == "testcase":
+        if testcase.tag == "testcase" and "WhiteboxTest" in testcase.attrib["classname"]:
             name = testcase.attrib["classname"] + "::" + testcase.attrib["name"]
             is_negative = False
             for failure in testcase:
