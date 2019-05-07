@@ -18,7 +18,6 @@ class Patch(object):
 
     def make_tsdir(self):
         tsdir = "__evosuiteSeed{}".format(self.seed)
-        os.mkdir(tsdir)
         shutil.copytree(self.origpath, tsdir)
         return tsdir
 
@@ -33,12 +32,15 @@ if __name__ == "__main__":
 
     #get patches
     patches = list()
+    seenseeds = set()
     patcheslistpath = "_patches.csv"
     with open(patcheslistpath) as patcheslist:
         for patchstr in patcheslist:
             parts = patchstr.split(",")
             assert len(parts) == 2
             seed, varnum = parts[0].strip(), parts[1].strip()
+            if seed in seenseeds:
+                continue
             p = Patch(seed, varnum, bugwd)
             patches.append(p)
 
