@@ -31,7 +31,7 @@ class Patch(object):
         os.chdir(self.tsdir)
         #hardcoded
         run(["java", "-jar", "/home/user/IntroClassScripts/libs/evosuite-1.0.6.jar", "-target", self.targetdir,
-             "-seed", SEED, "-Dsearch_budget=60", "-Dstopping_condition=MaxTime"])
+             "-seed", str(SEED), "-Dsearch_budget=60", "-Dstopping_condition=MaxTime"])
         os.chdir(self.bugwd)
 
 if __name__ == "__main__":
