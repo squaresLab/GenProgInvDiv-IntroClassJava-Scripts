@@ -59,4 +59,5 @@ if __name__ == "__main__":
 
     #todo: run evosuite, get test suite reports
     for p in patches:
+        print("Now analyzing seed {} variant{}".format(p.seed, p.varnum))
         p.gen_tests()
