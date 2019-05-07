@@ -34,7 +34,7 @@ class Patch(object):
         srcfile = glob.glob("*.java")[0]
         shortclassname = srcfile.split(".")[0]
         os.chdir(bugwd)
-        return "IntroclassJava.{}".format(shortclassname)
+        return "introclassJava.{}".format(shortclassname)
 
     def gen_tests(self):
         #hardcoded
