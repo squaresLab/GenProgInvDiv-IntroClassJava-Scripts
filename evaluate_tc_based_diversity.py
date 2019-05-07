@@ -42,9 +42,11 @@ class Patch(object):
 
     def gen_tests(self):
         #hardcoded
+        os.chdir(self.tsdir)
         run(["java", "-jar", "/home/user/IntroClassScripts/libs/evosuite-1.0.6.jar", "-class", self.srcclassname,
              "-projectCP", self.bytecodedir,
              "-seed", str(SEED), "-Dsearch_budget=60", "-Dstopping_condition=MaxTime", "-criterion", "line"])
+        os.chdir(self.bugwd)
 
 if __name__ == "__main__":
     if len(sys.argv) != 2:
