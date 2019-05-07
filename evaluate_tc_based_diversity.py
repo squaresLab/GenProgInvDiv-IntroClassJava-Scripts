@@ -17,6 +17,7 @@ class Patch(object):
         self.tsdir = self.make_tsdir(self.bugwd, self.seed, self.origpath)
         self.srcdir = self.resolve_srcdir(self.tsdir)
         self.srcclassname = self.resolve_srcclassname(self.bugwd, self.srcdir)
+        self.bytecodedir = self.resolve_bytecodedir(self.tsdir)
 
     def resolve_origpath(self, bugwd, seed):
         return "{}/__testdirSeed{}".format(bugwd, seed) #re-use the patched program from correctness testing
@@ -36,10 +37,13 @@ class Patch(object):
         os.chdir(bugwd)
         return "introclassJava.{}".format(shortclassname)
 
+    def resolve_bytecodedir(self, tsdir):
+        return "{}/target/classes/".format(tsdir)
+
     def gen_tests(self):
         #hardcoded
         run(["java", "-jar", "/home/user/IntroClassScripts/libs/evosuite-1.0.6.jar", "-class", self.srcclassname,
-             "-projectCP", self.srcdir,
+             "-projectCP", self.bytecodedir,
              "-seed", str(SEED), "-Dsearch_budget=60", "-Dstopping_condition=MaxTime", "-criterion", "line"])
 
 if __name__ == "__main__":
