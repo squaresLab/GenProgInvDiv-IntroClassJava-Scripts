@@ -16,7 +16,7 @@ class Patch(object):
         self.origpath = self.resolve_origpath(self.bugwd, self.seed)
         self.tsdir = self.make_tsdir(self.bugwd, self.seed, self.origpath)
         self.srcdir = self.resolve_srcdir(self.tsdir)
-        self.srcclassname = self.resolve_classname()
+        self.srcclassname = self.resolve_srcclassname(self.bugwd, self.tsdir)
 
     def resolve_origpath(self, bugwd, seed):
         return "{}/__testdirSeed{}".format(bugwd, seed) #re-use the patched program from correctness testing
@@ -29,8 +29,8 @@ class Patch(object):
     def resolve_srcdir(self, tsdir):
         return "{}/src/main/java/".format(tsdir)
 
-    def resolve_srcclassname(self, bugwd, tsdir):
-        os.chdir("{}/introclassJava/".format(tsdir))
+    def resolve_srcclassname(self, bugwd, srcdir):
+        os.chdir("{}/introclassJava/".format(srcdir))
         srcfile = glob.glob("*.java")[0]
         shortclassname = srcfile.split(".")[0]
         os.chdir(bugwd)
