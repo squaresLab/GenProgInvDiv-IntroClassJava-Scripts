@@ -9,6 +9,7 @@ class Patch(object):
     def __init__(self, seed, varnum, bugwd):
         self.seed = seed
         self.varnum = varnum
+        self.bugwd = bugwd
         self.origpath = self.resolve_origpath(self)
         self.tsdir = self.make_tsdir(self)
 
