@@ -10,8 +10,8 @@ class Patch(object):
         self.seed = seed
         self.varnum = varnum
         self.bugwd = bugwd
-        self.origpath = self.resolve_origpath(self)
-        self.tsdir = self.make_tsdir(self)
+        self.origpath = self.resolve_origpath()
+        self.tsdir = self.make_tsdir()
 
     def resolve_origpath(self):
         return "{}/__testdirSeed{}".format(self.bugwd, self.seed) #re-use the patched program from correctness testing
