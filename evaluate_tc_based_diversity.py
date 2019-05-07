@@ -16,7 +16,7 @@ class Patch(object):
         return "{}/__testdirSeed{}".format(self.bugwd, self.seed) #re-use the patched program from correctness testing
 
     def make_tsdir(self):
-        tsdir = "--evosuiteSeed{}".format(self.seed)
+        tsdir = "__evosuiteSeed{}".format(self.seed)
         os.mkdir(tsdir)
         shutil.copytree(self.origpath, tsdir)
         return tsdir
