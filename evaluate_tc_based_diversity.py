@@ -13,12 +13,12 @@ class Patch(object):
         self.tsdir = self.make_tsdir(self)
 
     def resolve_origpath(self):
-        return "{}/__variantsSeed{}/{}/tmp/variant{}".format(self.bugwd, self.seed, self.bugwd, self.varnum)
+        return "{}/__testdirSeed{}".format(self.bugwd, self.seed) #re-use the patched program from correctness testing
 
     def make_tsdir(self):
         tsdir = "--evosuiteSeed{}".format(self.seed)
         os.mkdir(tsdir)
-        shutil.copytree()
+        shutil.copytree(self.origpath, tsdir)
         return tsdir
 
 if __name__ == "__main__":
