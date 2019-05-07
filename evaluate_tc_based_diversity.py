@@ -2,6 +2,7 @@
 import sys
 import os
 import shutil
+import glob
 from subprocess import run
 
 SEED = 0
@@ -13,25 +14,33 @@ class Patch(object):
         self.varnum = varnum
         self.bugwd = bugwd
         self.origpath = self.resolve_origpath(self.bugwd, self.seed)
-        self.tsdir = self.make_tsdir(self.seed, self.origpath)
-        self.targetdir = self.resolve_targetdir(self.tsdir)
+        self.tsdir = self.make_tsdir(self.bugwd, self.seed, self.origpath)
+        self.srcdir = self.resolve_srcdir(self.tsdir)
+        self.srcclassname = self.resolve_classname()
 
     def resolve_origpath(self, bugwd, seed):
         return "{}/__testdirSeed{}".format(bugwd, seed) #re-use the patched program from correctness testing
 
-    def make_tsdir(self, seed, origpath):
-        tsdir = "__evosuiteSeed{}".format(seed)
+    def make_tsdir(self, bugwd, seed, origpath):
+        tsdir = "{}/__evosuiteSeed{}".format(bugwd, seed)
         shutil.copytree(origpath, tsdir)
         return tsdir
 
-    def resolve_targetdir(self, tsdir):
+    def resolve_srcdir(self, tsdir):
         return "{}/src/main/java/".format(tsdir)
 
+    def resolve_srcclassname(self, bugwd, tsdir):
+        os.chdir("{}/introclassJava/".format(tsdir))
+        srcfile = glob.glob("*.java")[0]
+        shortclassname = srcfile.split(".")[0]
+        os.chdir(bugwd)
+        return "IntroclassJava.{}".format(shortclassname)
+
     def gen_tests(self):
-        os.chdir(self.tsdir)
+        os.chdir(self.srcdir)
         #hardcoded
-        run(["java", "-jar", "/home/user/IntroClassScripts/libs/evosuite-1.0.6.jar", "-target", self.targetdir,
-             "-seed", str(SEED), "-Dsearch_budget=60", "-Dstopping_condition=MaxTime"])
+        run(["java", "-jar", "/home/user/IntroClassScripts/libs/evosuite-1.0.6.jar", "-class", self.srcclassname,
+             "-seed", str(SEED), "-Dsearch_budget=60", "-Dstopping_condition=MaxTime", "-criterion", "line"])
         os.chdir(self.bugwd)
 
 if __name__ == "__main__":
@@ -40,6 +49,7 @@ if __name__ == "__main__":
         exit(1)
 
     bugwd = sys.argv[1]
+    bugwd = os.path.abspath(bugwd) #convert to absolute path
 
     os.chdir(bugwd)
 
