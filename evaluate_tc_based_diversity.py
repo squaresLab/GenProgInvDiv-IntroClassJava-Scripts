@@ -30,12 +30,15 @@ if __name__ == "__main__":
 
     os.chdir(bugwd)
 
-    patches = list() #list of tuples: (seed, varnum)
+    #get patches
+    patches = list()
     patcheslistpath = "_patches.csv"
     with open(patcheslistpath) as patcheslist:
         for patchstr in patcheslist:
             parts = patchstr.split(",")
             assert len(parts) == 2
-            patches.append((parts[0].strip(), parts[1].strip()))
+            seed, varnum = parts[0].strip(), parts[1].strip()
+            p = Patch(seed, varnum, bugwd)
+            patches.append(p)
 
-    #todo: get patches, run evosuite, get test suite reports
+    #todo: run evosuite, get test suite reports
