@@ -1,8 +1,10 @@
+#python 3.5+
 import sys
 import os
 import shutil
+from subprocess import run
 
-#get hardcoded path for docker containers
+SEED = 0
 
 class Patch(object):
 
@@ -10,16 +12,27 @@ class Patch(object):
         self.seed = seed
         self.varnum = varnum
         self.bugwd = bugwd
-        self.origpath = self.resolve_origpath()
-        self.tsdir = self.make_tsdir()
+        self.origpath = self.resolve_origpath(self.bugwd, self.seed)
+        self.tsdir = self.make_tsdir(self.seed, self.origpath)
+        self.targetdir = self.resolve_targetdir(self.tsdir)
 
-    def resolve_origpath(self):
-        return "{}/__testdirSeed{}".format(self.bugwd, self.seed) #re-use the patched program from correctness testing
+    def resolve_origpath(self, bugwd, seed):
+        return "{}/__testdirSeed{}".format(bugwd, seed) #re-use the patched program from correctness testing
 
-    def make_tsdir(self):
-        tsdir = "__evosuiteSeed{}".format(self.seed)
-        shutil.copytree(self.origpath, tsdir)
+    def make_tsdir(self, seed, origpath):
+        tsdir = "__evosuiteSeed{}".format(seed)
+        shutil.copytree(origpath, tsdir)
         return tsdir
+
+    def resolve_targetdir(self, tsdir):
+        return "{}/src/main/java/".format(tsdir)
+
+    def gen_tests(self):
+        os.chdir(self.tsdir)
+        #hardcoded
+        run(["java", "-jar", "/home/user/IntroClassScripts/libs/evosuite-1.0.6.jar", "-target", self.targetdir,
+             "-seed", SEED, "-Dsearch_budget=60", "-Dstopping_condition=MaxTime"])
+        os.chdir(self.bugwd)
 
 if __name__ == "__main__":
     if len(sys.argv) != 2:
@@ -45,3 +58,5 @@ if __name__ == "__main__":
             patches.append(p)
 
     #todo: run evosuite, get test suite reports
+    for p in patches:
+        p.gen_tests()
