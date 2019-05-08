@@ -48,6 +48,18 @@ class Patch(object):
     def resolve_evosuite_test_classname(self, srcclassname):
         return "{}_ESTest".format(srcclassname)
 
+    def gen_tests(self):
+        self.evosuite_tsdir = "{}/evosuite-tests".format(self.tsdir)
+        if os.path.exists(self.evosuite_tsdir):
+            print("EvoSuite tests already exist. Not regenerating tests")
+        else:
+            #hardcoded
+            os.chdir(self.tsdir)
+            run(["java", "-jar", "/home/user/IntroClassScripts/libs/evosuite-1.0.6.jar", "-class", self.srcclassname,
+                 "-projectCP", self.bytecodedir,
+                 "-seed", str(SEED), "-Dsearch_budget=60", "-Dstopping_condition=MaxTime", "-criterion", "line"])
+            os.chdir(self.bugwd)
+
     def compile_evosuite_tests_classpath(self):
         #use the patch's own source code for compiling tests
         return self.evosuite_tsdir + \
@@ -55,15 +67,6 @@ class Patch(object):
                 ":{}/lib/junit-4.12.jar".format(os.environ["GP4J_HOME"]) + \
                 ":{}/lib/hamcrest-core-1.3.jar".format(os.environ["GP4J_HOME"]) + \
                 ":/home/user/IntroClassScripts/libs/evosuite-1.0.6.jar" #hardcode
-
-    def gen_tests(self):
-        #hardcoded
-        os.chdir(self.tsdir)
-        run(["java", "-jar", "/home/user/IntroClassScripts/libs/evosuite-1.0.6.jar", "-class", self.srcclassname,
-             "-projectCP", self.bytecodedir,
-             "-seed", str(SEED), "-Dsearch_budget=60", "-Dstopping_condition=MaxTime", "-criterion", "line"])
-        os.chdir(self.bugwd)
-        self.evosuite_tsdir = "{}/evosuite-tests".format(self.tsdir)
 
     def compile_evosuite_tests(self):
         run(["javac", "-classpath", self.compile_evosuite_tests_classpath(), "{}/{}.java".format(self.evosuite_tsdir, self.evosuite_test_classname.replace(".", "/"))])
@@ -99,10 +102,7 @@ if __name__ == "__main__":
     #todo: run evosuite, get test suite reports
     for p in patches:
         print("Now analyzing seed {} variant{}".format(p.seed, p.varnum))
-        if p.evosuite_tsdir is None:
-            p.gen_tests()
-        else:
-            print("EvoSuite test suite directory already exists. Not re-generating tests.")
+        p.gen_tests()
 
     #compile after generation
     for p in patches:
