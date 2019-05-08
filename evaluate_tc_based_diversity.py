@@ -65,7 +65,7 @@ class Patch(object):
         os.chdir(self.bugwd)
         self.evosuite_tsdir = "{}/evosuite-tests".format(self.tsdir)
 
-        #re-compile evosuite tests
+    def compile_evosuite_tests(self):
         run(["javac", "-classpath", self.compile_evosuite_tests_classpath(), "{}/introclassJava/*.java".format(self.evosuite_tsdir)])
 
 
@@ -103,3 +103,7 @@ if __name__ == "__main__":
             p.gen_tests()
         else:
             print("EvoSuite test suite directory already exists. Not re-generating tests.")
+
+    #compile after generation
+    for p in patches:
+        p.compile_evosuite_tests()
