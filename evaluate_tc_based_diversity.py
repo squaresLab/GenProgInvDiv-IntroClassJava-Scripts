@@ -58,12 +58,12 @@ class Patch(object):
 
     def gen_tests(self):
         #hardcoded
-        os.chdir("{}/src/".format(self.tsdir))
+        os.chdir(self.tsdir)
         run(["java", "-jar", "/home/user/IntroClassScripts/libs/evosuite-1.0.6.jar", "-class", self.srcclassname,
              "-projectCP", self.bytecodedir,
              "-seed", str(SEED), "-Dsearch_budget=60", "-Dstopping_condition=MaxTime", "-criterion", "line"])
         os.chdir(self.bugwd)
-        self.evosuite_tsdir = "{}/src/evosuite-tests".format(self.tsdir)
+        self.evosuite_tsdir = "{}/evosuite-tests".format(self.tsdir)
 
         #re-compile evosuite tests
         run(["javac", "-classpath", self.compile_evosuite_tests_classpath(), "{}/introclassJava/*.java".format(self.evosuite_tsdir)])
