@@ -18,13 +18,18 @@ class Patch(object):
         self.srcdir = self.resolve_srcdir(self.tsdir)
         self.srcclassname = self.resolve_srcclassname(self.bugwd, self.srcdir)
         self.bytecodedir = self.resolve_bytecodedir(self.tsdir)
+        self.evosuite_tsdir = None #placeholder value for ungenerated test suite
+        self.evosuite_test_classname = self.resolve_evosuite_test_classname(self.srcclassname)
+        self.reports = dict() #maps patches (test suites) to
 
     def resolve_origpath(self, bugwd, seed):
         return "{}/__testdirSeed{}".format(bugwd, seed) #re-use the patched program from correctness testing
 
     def make_tsdir(self, bugwd, seed, origpath):
         tsdir = "{}/__evosuiteSeed{}".format(bugwd, seed)
-        shutil.copytree(origpath, tsdir)
+        if not os.path.isdir(tsdir):
+            #if tsdir doesn't yet exist, make it and copy stuff to it
+            shutil.copytree(origpath, tsdir)
         return tsdir
 
     def resolve_srcdir(self, tsdir):
@@ -40,13 +45,32 @@ class Patch(object):
     def resolve_bytecodedir(self, tsdir):
         return "{}/target/classes/".format(tsdir)
 
+    def resolve_evosuite_test_classname(self, srcclassname):
+        return "{}_ESTest".format(srcclassname)
+
+    def compile_evosuite_tests_classpath(self):
+        #use the patch's own source code for compiling tests
+        return self.evosuite_tsdir + \
+                ":" + self.bytecodedir + \
+                ":{}/lib/junit-4.12.jar".format(os.environ["GP4J_HOME"]) + \
+                ":{}/lib/hamcrest-core-1.3.jar".format(os.environ["GP4J_HOME"]) + \
+                ":/home/user/IntroClassScripts/libs/evosuite-1.0.6.jar" #hardcode
+
     def gen_tests(self):
         #hardcoded
-        os.chdir(self.tsdir)
+        os.chdir("{}/src/".format(self.tsdir))
         run(["java", "-jar", "/home/user/IntroClassScripts/libs/evosuite-1.0.6.jar", "-class", self.srcclassname,
              "-projectCP", self.bytecodedir,
              "-seed", str(SEED), "-Dsearch_budget=60", "-Dstopping_condition=MaxTime", "-criterion", "line"])
         os.chdir(self.bugwd)
+        self.evosuite_tsdir = "{}/src/evosuite-tests".format(self.tsdir)
+
+        #re-compile evosuite tests
+        run(["javac", "-classpath", self.compile_evosuite_tests_classpath(), "{}/introclassJava/*.java".format(self.evosuite_tsdir)])
+
+
+def run_patch_on_ts(patchsrc, tssrc):
+    pass #todo: implement
 
 if __name__ == "__main__":
     if len(sys.argv) != 2:
@@ -75,4 +99,7 @@ if __name__ == "__main__":
     #todo: run evosuite, get test suite reports
     for p in patches:
         print("Now analyzing seed {} variant{}".format(p.seed, p.varnum))
-        p.gen_tests()
+        if p.evosuite_tsdir is None:
+            p.gen_tests()
+        else:
+            print("EvoSuite test suite directory already exists. Not re-generating tests.")
