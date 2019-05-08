@@ -66,7 +66,7 @@ class Patch(object):
         self.evosuite_tsdir = "{}/evosuite-tests".format(self.tsdir)
 
     def compile_evosuite_tests(self):
-        run(["javac", "-classpath", self.compile_evosuite_tests_classpath(), "{}/introclassJava/*.java".format(self.evosuite_tsdir)])
+        run(["javac", "-classpath", self.compile_evosuite_tests_classpath(), "{}/{}.java".format(self.evosuite_tsdir, self.evosuite_test_classname.replace(".", "/"))])
 
 
 def run_patch_on_ts(patchsrc, tssrc):
