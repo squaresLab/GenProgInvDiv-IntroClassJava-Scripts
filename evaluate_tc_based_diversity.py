@@ -24,6 +24,8 @@ class Patch(object):
         self.evosuite_tsdir = None #placeholder value for ungenerated test suite
         self.evosuite_test_classname = self.resolve_evosuite_test_classname(self.srcclassname)
         self.failed_tests = dict() #maps patches (test suites) to failed tests
+        self.semantic_distance = dict() #maps patches p to the semantic distance between self and p
+        self.semantic_diversity = 0
 
     def resolve_origpath(self, bugwd, seed):
         return "{}/__testdirSeed{}".format(bugwd, seed) #re-use the patched program from correctness testing
@@ -83,7 +85,6 @@ def process_junit_output(output):
 
     for line in output.splitlines():
         line = line.strip()
-        print(line)
         if re.search("\AThere (was|were) [0-9]+ failures?:", line):
             failure_description_started = True
             continue
@@ -98,7 +99,6 @@ def process_junit_output(output):
     return failed_tests
 
 def run_patch_on_ts(patchsrc, tssrc):
-    #todo: implement
     classpath = tssrc.evosuite_tsdir + \
                 ":" + patchsrc.bytecodedir + \
                 ":{}/lib/junit-4.12.jar".format(os.environ["GP4J_HOME"]) + \
@@ -112,7 +112,19 @@ def run_patch_on_ts(patchsrc, tssrc):
     print(failures)
     patchsrc.failed_tests[tssrc] = failures
 
-
+def set_sem_dist(patch1, patch2):
+    if patch2 in patch1.semantic_distance or patch1 in patch2.semantic_distance:
+        return #distances are already calculated
+    assert set(patch1.failed_tests.keys()) == set(patch2.failed_tests.keys())  # assume patches used for evosuite were the same
+    dist = 0
+    for p in patch1.failed_tests.keys():
+        p1_failed_tests = patch1.failed_tests[p]
+        p2_failed_tests = patch2.failed_tests[p]
+        dist_respect_to_p = len(p1_failed_tests.symmetric_distance(p2_failed_tests))
+        dist += dist_respect_to_p
+    patch1.semantic_distance[patch2] = patch2.semantic_distance[patch1] = dist
+    patch1.semantic_diversity += dist
+    patch2.semantic_diversity += dist
 
 if __name__ == "__main__":
     if len(sys.argv) != 2:
@@ -147,8 +159,18 @@ if __name__ == "__main__":
     for p in patches:
         p.compile_evosuite_tests()
 
+    #construct test case profiles by seeing which tests fail
     for p in patches:
         for q in patches:
             if p == q: continue
             print("Evaluating seed {}'s patch on seed {}'s generated tests:".format(p.seed, q.seed))
             run_patch_on_ts(p, q)
+
+    #calculate semantic distance (& diversity)
+    for p in patches:
+        for q in patches:
+            if p == q: continue
+            set_sem_dist(p, q)
+
+    for p in patches:
+        print("Diversity of seed {} is {}".format(p.seed, p.semantic_diversity))
