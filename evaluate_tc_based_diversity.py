@@ -120,7 +120,7 @@ def set_sem_dist(patch1, patch2):
     for p in patch1.failed_tests.keys():
         p1_failed_tests = patch1.failed_tests[p]
         p2_failed_tests = patch2.failed_tests[p]
-        dist_respect_to_p = len(p1_failed_tests.symmetric_distance(p2_failed_tests))
+        dist_respect_to_p = len(p1_failed_tests.symmetric_difference(p2_failed_tests))
         dist += dist_respect_to_p
     patch1.semantic_distance[patch2] = patch2.semantic_distance[patch1] = dist
     patch1.semantic_diversity += dist
