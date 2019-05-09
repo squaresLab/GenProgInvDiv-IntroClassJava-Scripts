@@ -162,7 +162,6 @@ if __name__ == "__main__":
     #construct test case profiles by seeing which tests fail
     for p in patches:
         for q in patches:
-            if p == q: continue
             print("Evaluating seed {}'s patch on seed {}'s generated tests:".format(p.seed, q.seed))
             run_patch_on_ts(p, q)
 
