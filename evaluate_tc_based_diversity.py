@@ -4,6 +4,7 @@ import os
 import shutil
 import glob
 from subprocess import run
+from subprocess import PIPE
 
 SEED = 0
 
@@ -73,7 +74,19 @@ class Patch(object):
 
 
 def run_patch_on_ts(patchsrc, tssrc):
-    pass #todo: implement
+    #todo: implement
+    classpath = tssrc.evosuite_tsdir + \
+                ":" + patchsrc.bytecodedir + \
+                ":{}/lib/junit-4.12.jar".format(os.environ["GP4J_HOME"]) + \
+                ":{}/lib/hamcrest-core-1.3.jar".format(os.environ["GP4J_HOME"]) + \
+                ":/home/user/IntroClassScripts/libs/evosuite-1.0.6.jar"
+
+    junit_out = run(["java", "-cp", classpath, "org.junit.runner.JUnitCore", tssrc.evosuite_test_classname],
+                    stdout=PIPE, stderr=PIPE) #this is a subprocess.CompletedProcess
+
+    print(junit_out.stdout)
+
+
 
 if __name__ == "__main__":
     if len(sys.argv) != 2:
@@ -107,3 +120,9 @@ if __name__ == "__main__":
     #compile after generation
     for p in patches:
         p.compile_evosuite_tests()
+
+    for p in patches:
+        for q in patches:
+            if p == q: continue
+            print("Evaluating seed {}'s patch on seed {}'s generated tests:".format(p.seed, q.seed))
+            run_patch_on_ts(p, q)
