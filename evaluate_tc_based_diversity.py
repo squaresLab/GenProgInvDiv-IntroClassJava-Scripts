@@ -1,3 +1,4 @@
+
 #python 3.5+
 import sys
 import os
@@ -82,15 +83,15 @@ def process_junit_output(output):
 
     for line in output.splitlines():
         line = line.strip()
-        failed_test_index = None
-        if re.search("\AThere (was|were) [0-9]+ failures?\Z", line):
+        print(line)
+        if re.search("\AThere (was|were) [0-9]+ failures?:", line):
             failure_description_started = True
-            failed_test_index = 1
             continue
         if failure_description_started:
-            pattern = "\A{}\) (test[0-9]+)\(".format(failed_test_index)
+            pattern = "\A[0-9]+\) (test[0-9]+)\("
             test = re.findall(pattern, line)
             assert len(test) <= 1 #num of tests should only be zero or one per line
+            if len(test) == 1: print("match found")
             for t in test:
                 failed_tests.add(t)
 
@@ -107,7 +108,7 @@ def run_patch_on_ts(patchsrc, tssrc):
     junit_out = run(["java", "-cp", classpath, "org.junit.runner.JUnitCore", tssrc.evosuite_test_classname],
                     stdout=PIPE, stderr=PIPE) #this is a subprocess.CompletedProcess
 
-    failures = process_junit_output(junit_out.stdout)
+    failures = process_junit_output(junit_out.stdout.decode())
     print(failures)
     patchsrc.failed_tests[tssrc] = failures
 
