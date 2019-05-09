@@ -3,6 +3,7 @@ import sys
 import os
 import shutil
 import glob
+import re
 from subprocess import run
 from subprocess import PIPE
 
@@ -21,7 +22,7 @@ class Patch(object):
         self.bytecodedir = self.resolve_bytecodedir(self.tsdir)
         self.evosuite_tsdir = None #placeholder value for ungenerated test suite
         self.evosuite_test_classname = self.resolve_evosuite_test_classname(self.srcclassname)
-        self.reports = dict() #maps patches (test suites) to
+        self.failed_tests = dict() #maps patches (test suites) to failed tests
 
     def resolve_origpath(self, bugwd, seed):
         return "{}/__testdirSeed{}".format(bugwd, seed) #re-use the patched program from correctness testing
@@ -72,6 +73,28 @@ class Patch(object):
     def compile_evosuite_tests(self):
         run(["javac", "-classpath", self.compile_evosuite_tests_classpath(), "{}/{}.java".format(self.evosuite_tsdir, self.evosuite_test_classname.replace(".", "/"))])
 
+#input: the output (string form) of a junit test execution
+#output: a set of failing test cases (method names of tests as strings)
+def process_junit_output(output):
+    failed_tests = set()
+
+    failure_description_started = False
+
+    for line in output.splitlines():
+        line = line.strip()
+        failed_test_index = None
+        if re.search("\AThere (was|were) [0-9]+ failures?\Z", line):
+            failure_description_started = True
+            failed_test_index = 1
+            continue
+        if failure_description_started:
+            pattern = "\A{}\) (test[0-9]+)\(".format(failed_test_index)
+            test = re.findall(pattern, line)
+            assert len(test) <= 1 #num of tests should only be zero or one per line
+            for t in test:
+                failed_tests.add(t)
+
+    return failed_tests
 
 def run_patch_on_ts(patchsrc, tssrc):
     #todo: implement
@@ -84,7 +107,9 @@ def run_patch_on_ts(patchsrc, tssrc):
     junit_out = run(["java", "-cp", classpath, "org.junit.runner.JUnitCore", tssrc.evosuite_test_classname],
                     stdout=PIPE, stderr=PIPE) #this is a subprocess.CompletedProcess
 
-    print(junit_out.stdout)
+    failures = process_junit_output(junit_out.stdout)
+    print(failures)
+    patchsrc.failed_tests[tssrc] = failures
 
 
 
