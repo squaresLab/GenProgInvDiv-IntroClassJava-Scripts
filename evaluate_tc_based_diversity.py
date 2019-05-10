@@ -24,8 +24,9 @@ class Patch(object):
         self.evosuite_tsdir = None #placeholder value for ungenerated test suite
         self.evosuite_test_classname = self.resolve_evosuite_test_classname(self.srcclassname)
         self.failed_tests = dict() #maps patches (test suites) to failed tests
-        self.semantic_distance = dict() #maps patches p to the semantic distance between self and p
-        self.semantic_diversity = 0
+        self.semantic_distance_not_normalized = dict() #maps patches p to the semantic distance between self and p
+        self.semantic_diversity_not_normalized = 0
+        self.num_of_evosuite_tests = 0
 
     def resolve_origpath(self, bugwd, seed):
         return "{}/__testdirSeed{}".format(bugwd, seed) #re-use the patched program from correctness testing
@@ -76,10 +77,15 @@ class Patch(object):
     def compile_evosuite_tests(self):
         run(["javac", "-classpath", self.compile_evosuite_tests_classpath(), "{}/{}.java".format(self.evosuite_tsdir, self.evosuite_test_classname.replace(".", "/"))])
 
+    def get_normalized_semantic_diversity_score(self):
+        total_num_tests = sum([p.num_of_evosuite_tests for p in self.failed_tests.keys()])
+        return self.semantic_diversity_not_normalized / total_num_tests
+
 #input: the output (string form) of a junit test execution
 #output: a set of failing test cases (method names of tests as strings)
 def process_junit_output(output):
     failed_tests = set()
+    num_tests = None
 
     failure_description_started = False
 
@@ -89,14 +95,21 @@ def process_junit_output(output):
             failure_description_started = True
             continue
         if failure_description_started:
-            pattern = "\A[0-9]+\) (test[0-9]+)\("
-            test = re.findall(pattern, line)
+            failed_test_pattern = "\A[0-9]+\) (test[0-9]+)\("
+            test = re.findall(failed_test_pattern, line)
             assert len(test) <= 1 #num of tests should only be zero or one per line
-            if len(test) == 1: print("match found")
             for t in test:
                 failed_tests.add(t)
 
-    return failed_tests
+            num_tests_regex_found = re.findall("\ATests? run: ([0-9]+)", line)
+            if len(num_tests_regex_found) == 1:
+                num_tests = num_tests_regex_found[0]
+        else:
+            num_tests_regex_found = re.findall("\AOK \(([0-9]+) tests?\)")
+            if len(num_tests_regex_found) == 1:
+                num_tests = num_tests_regex_found[0]
+
+    return (failed_tests, num_tests)
 
 def run_patch_on_ts(patchsrc, tssrc):
     classpath = tssrc.evosuite_tsdir + \
@@ -108,12 +121,13 @@ def run_patch_on_ts(patchsrc, tssrc):
     junit_out = run(["java", "-cp", classpath, "org.junit.runner.JUnitCore", tssrc.evosuite_test_classname],
                     stdout=PIPE, stderr=PIPE) #this is a subprocess.CompletedProcess
 
-    failures = process_junit_output(junit_out.stdout.decode())
-    print(failures)
+    failures, num_tests = process_junit_output(junit_out.stdout.decode())
+    print(failures, num_tests)
     patchsrc.failed_tests[tssrc] = failures
+    tssrc.num_of_evosuite_tests = num_tests
 
 def set_sem_dist(patch1, patch2):
-    if patch2 in patch1.semantic_distance or patch1 in patch2.semantic_distance:
+    if patch2 in patch1.semantic_distance_not_normalized or patch1 in patch2.semantic_distance_not_normalized:
         return #distances are already calculated
     assert set(patch1.failed_tests.keys()) == set(patch2.failed_tests.keys())  # assume patches used for evosuite were the same
     dist = 0
@@ -122,9 +136,11 @@ def set_sem_dist(patch1, patch2):
         p2_failed_tests = patch2.failed_tests[p]
         dist_respect_to_p = len(p1_failed_tests.symmetric_difference(p2_failed_tests))
         dist += dist_respect_to_p
-    patch1.semantic_distance[patch2] = patch2.semantic_distance[patch1] = dist
-    patch1.semantic_diversity += dist
-    patch2.semantic_diversity += dist
+    patch1.semantic_distance_not_normalized[patch2] = patch2.semantic_distance_not_normalized[patch1] = dist
+    patch1.semantic_diversity_not_normalized += dist
+    patch2.semantic_diversity_not_normalized += dist
+
+#todo: normalize semantic distance & diversity by number of test cases
 
 if __name__ == "__main__":
     if len(sys.argv) != 2:
@@ -150,7 +166,6 @@ if __name__ == "__main__":
             p = Patch(seed, varnum, bugwd)
             patches.append(p)
 
-    #todo: run evosuite, get test suite reports
     for p in patches:
         print("Now analyzing seed {} variant{}".format(p.seed, p.varnum))
         p.gen_tests()
@@ -172,4 +187,4 @@ if __name__ == "__main__":
             set_sem_dist(p, q)
 
     for p in patches:
-        print("Diversity of seed {} is {}".format(p.seed, p.semantic_diversity))
+        print("Normalized diversity of seed {} is {}".format(p.seed, p.get_normalized_semantic_diversity_score()))
