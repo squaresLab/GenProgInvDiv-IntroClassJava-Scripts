@@ -187,6 +187,6 @@ if __name__ == "__main__":
             set_sem_dist(p, q)
 
     for p in patches:
-        print("Normalized diversity of seed {} is {}, number of generated tests is {}"
-              .format(p.seed, p.get_normalized_semantic_diversity_score(), p.num_of_evosuite_tests))
+        print("Normalized diversity of seed {} is {}"
+              .format(p.seed, p.get_normalized_semantic_diversity_score()))
 
