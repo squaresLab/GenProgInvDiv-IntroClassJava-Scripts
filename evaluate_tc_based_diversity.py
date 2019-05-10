@@ -82,7 +82,7 @@ class Patch(object):
         return self.semantic_diversity_not_normalized / total_num_tests
 
 #input: the output (string form) of a junit test execution
-#output: a set of failing test cases (method names of tests as strings)
+#output: (a set of failing test cases (method names of tests as strings), the number of tests ran)
 def process_junit_output(output):
     failed_tests = set()
     num_tests = None
@@ -105,11 +105,11 @@ def process_junit_output(output):
             if len(num_tests_regex_found) == 1:
                 num_tests = num_tests_regex_found[0]
         else:
-            num_tests_regex_found = re.findall("\AOK \(([0-9]+) tests?\)")
+            num_tests_regex_found = re.findall("\AOK \(([0-9]+) tests?\)", line)
             if len(num_tests_regex_found) == 1:
                 num_tests = num_tests_regex_found[0]
 
-    return (failed_tests, num_tests)
+    return (failed_tests, int(num_tests))
 
 def run_patch_on_ts(patchsrc, tssrc):
     classpath = tssrc.evosuite_tsdir + \
