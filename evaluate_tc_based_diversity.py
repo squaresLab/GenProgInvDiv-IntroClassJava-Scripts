@@ -77,10 +77,6 @@ class Patch(object):
     def compile_evosuite_tests(self):
         run(["javac", "-classpath", self.compile_evosuite_tests_classpath(), "{}/{}.java".format(self.evosuite_tsdir, self.evosuite_test_classname.replace(".", "/"))])
 
-    def get_normalized_semantic_diversity_score(self):
-        total_num_tests = sum([p.num_of_evosuite_tests for p in self.failed_tests.keys()])
-        return self.semantic_diversity_not_normalized / total_num_tests
-
 #input: the output (string form) of a junit test execution
 #output: (a set of failing test cases (method names of tests as strings), the number of tests ran)
 def process_junit_output(output):
@@ -187,4 +183,4 @@ if __name__ == "__main__":
             set_sem_dist(p, q)
 
     for p in patches:
-        print("Normalized diversity of seed {} is {}".format(p.seed, p.get_normalized_semantic_diversity_score()))
+        print("Non-normalized diversity of seed {} is {}, number of generated tests is {}".format(p.seed, p.semantic_diversity_not_normalized, p.num_of_evosuite_tests))
