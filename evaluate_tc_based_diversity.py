@@ -157,8 +157,8 @@ if __name__ == "__main__":
             parts = patchstr.split(",")
             assert len(parts) == 2
             seed, varnum = parts[0].strip(), parts[1].strip()
-            if seed in seenseeds:
-                continue
+            #if seed in seenseeds:
+            #    continue
             p = Patch(seed, varnum, bugwd)
             patches.append(p)
 
