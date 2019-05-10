@@ -45,10 +45,14 @@ if __name__ == "__main__":
 		exit(1)
 	bugwd = os.path.abspath(sys.argv[1]) + "/"
 	repairsfile_path = sys.argv[2]
+	seedset = set()
 	with open(repairsfile_path) as repairsfile:
 		for repairline in repairsfile:
 			repairline_parts = repairline.split(',')
 			assert len(repairline_parts) == 2
 			seednum = repairline_parts[0].strip()
+			if seednum in seedset:
+				continue #ignore repeats
+			seedset.add(seednum)
 			varnum = repairline_parts[1].strip()
 			check_patch(bugwd, seednum, varnum)
